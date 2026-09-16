@@ -29,7 +29,9 @@ export default function ManageEvents() {
     setError(null);
     try {
       const res = await getEvents({ status: statusFilter });
-      setEvents(res.data || []);
+      // Backend returns { success, data: [...] }, mock returns same shape
+      const eventsArray = res.data?.data || res.data || [];
+      setEvents(Array.isArray(eventsArray) ? eventsArray : []);
     } catch (err) {
       setError(err.message);
     } finally {
