@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import Header from '../../components/admin/Header';
 import { realAlumniList } from '../../data/realAlumniData';
+import { useAuth } from '../../lib/auth';
+import { useNotifications } from '../../context/NotificationContext';
 import { 
   Search, 
   Filter, 
@@ -16,7 +19,9 @@ import {
   DollarSign
 } from 'lucide-react';
 
-export default function FindAlumni({ onNavigateToChat }) {
+export default function FindAlumni({ onBack, onToggleSidebar, onNavigateToChat }) {
+  const { user } = useAuth();
+  const { sendMentorshipRequest } = useNotifications();
   const [alumni] = useState(realAlumniList);
   const [search, setSearch] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('all');
@@ -44,27 +49,38 @@ export default function FindAlumni({ onNavigateToChat }) {
 
   const handleSendRequest = (e) => {
     e.preventDefault();
+    
+    // Dispatch request to global context (Alumni Dashboard & Notifications)
+    sendMentorshipRequest({
+      studentName: user?.name || 'Alex Rivera',
+      alumniName: selectedAlumni?.name || 'Alumni Mentor',
+      topic: requestModal === 'mentorship' ? '1-on-1 Guidance & Placement Advice' : 'Internal Job Referral',
+      note: requestNote
+    });
+
     setSentSuccess(true);
     setTimeout(() => {
       setSentSuccess(false);
       setRequestModal(null);
       setSelectedAlumni(null);
       setRequestNote('');
-      alert(`Connection & Mentorship Request sent successfully to ${selectedAlumni?.name}!`);
+      alert(`Connection & Mentorship Request sent successfully to ${selectedAlumni?.name}! Request dispatched to Alumni Dashboard.`);
     }, 1000);
   };
 
   return (
-    <div className="p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-          Find & Connect with Alumni Mentors
-        </h1>
-        <p className="text-slate-500 text-xs mt-1">
-          Explore alumni across KIET, KIEW, and KIEK working at IIIT-H, TCS, Alphanome.ai, Piramal, and leading tech companies.
-        </p>
-      </div>
+    <div className="flex-1 min-w-0 bg-[#f8fafc] pb-12 min-h-screen">
+      <Header
+        title="Find & Connect with Alumni Mentors"
+        subtitle="Explore verified alumni across KIET, KIEW, and KIEK working at top global tech companies"
+        onBack={onBack}
+        onToggleSidebar={onToggleSidebar}
+        searchQuery={search}
+        onSearchChange={setSearch}
+        searchPlaceholder="Search by name, company (e.g. IIITH, TCS, Piramal), branch, or skill..."
+      />
+
+      <main className="p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
 
       {/* Search & Filter Controls */}
       <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-3">
@@ -266,6 +282,7 @@ export default function FindAlumni({ onNavigateToChat }) {
           </div>
         </div>
       )}
+      </main>
     </div>
   );
 }

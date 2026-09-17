@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Header from '../../components/admin/Header';
 import { getMentorships, updateMentorship, addMentorshipSession } from '../../api/mentorshipApi';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge, statusClass } from '../../components/ui/badge';
@@ -35,7 +36,7 @@ function isSessionCompleted(sessionDateInput) {
   return sessionDate < now;
 }
 
-export default function MyMentorships() {
+export default function MyMentorships({ onBack, onToggleSidebar }) {
   const { user } = useAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -186,23 +187,27 @@ export default function MyMentorships() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            <GraduationCap className="w-6 h-6 text-purple-600" />
-            Mentorships & 1-on-1 Sessions
-          </h1>
-          <p className="text-sm text-slate-500">
-            Track student-alumni pairings, log meeting discussions, monitor milestones, and exchange reviews.
-          </p>
-        </div>
+    <div className="flex-1 min-w-0 bg-[#f8fafc] pb-12 min-h-screen">
+      <Header
+        title="Mentorships & 1-on-1 Sessions"
+        subtitle="Track student-alumni pairings, log meeting discussions, monitor milestones, and exchange reviews"
+        onBack={onBack}
+        onToggleSidebar={onToggleSidebar}
+      />
 
-        {user?.role === 'student' && (
-          <RequestMentorshipButton onSuccess={load} />
-        )}
-      </div>
+      <main className="p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+              <GraduationCap className="w-6 h-6 text-purple-600" />
+              1-on-1 Mentorship Sessions
+            </h2>
+          </div>
+
+          {user?.role === 'student' && (
+            <RequestMentorshipButton onSuccess={load} />
+          )}
+        </div>
 
       {error && (
         <Alert variant="destructive">
@@ -558,6 +563,7 @@ export default function MyMentorships() {
           </DialogFooter>
         </form>
       </Dialog>
+      </main>
     </div>
   );
 }

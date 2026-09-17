@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../lib/auth';
+import AlumniConnectLogo from '../../components/common/AlumniConnectLogo';
 import { 
   Eye, 
   EyeOff, 
@@ -9,8 +10,7 @@ import {
   AlertCircle, 
   ShieldCheck, 
   GraduationCap, 
-  BookOpen,
-  Sparkles
+  BookOpen
 } from 'lucide-react';
 
 const roleMeta = {
@@ -18,31 +18,31 @@ const roleMeta = {
     id: 'admin',
     title: 'Administrator',
     icon: ShieldCheck,
-    gradient: 'from-indigo-600 to-violet-600',
-    shadow: 'shadow-indigo-500/25',
-    text: 'text-indigo-600',
-    bg: 'bg-indigo-50',
-    ring: 'focus:ring-indigo-500'
+    accentText: 'text-[#0F4C81]',
+    accentBg: 'bg-blue-50 border-blue-200',
+    ring: 'focus:ring-[#0F4C81]',
+    btnGradient: 'from-[#0F4C81] to-[#1E56A0]',
+    shadow: 'shadow-blue-900/30'
   },
   alumni: {
     id: 'alumni',
     title: 'Alumni',
     icon: GraduationCap,
-    gradient: 'from-blue-600 to-cyan-600',
-    shadow: 'shadow-blue-500/25',
-    text: 'text-blue-600',
-    bg: 'bg-blue-50',
-    ring: 'focus:ring-blue-500'
+    accentText: 'text-[#0284C7]',
+    accentBg: 'bg-sky-50 border-sky-200',
+    ring: 'focus:ring-[#0284C7]',
+    btnGradient: 'from-[#0284C7] to-[#0EA5E9]',
+    shadow: 'shadow-sky-500/25'
   },
   student: {
     id: 'student',
     title: 'Student',
     icon: BookOpen,
-    gradient: 'from-emerald-600 to-teal-600',
-    shadow: 'shadow-emerald-500/25',
-    text: 'text-emerald-600',
-    bg: 'bg-emerald-50',
-    ring: 'focus:ring-emerald-500'
+    accentText: 'text-[#059669]',
+    accentBg: 'bg-emerald-50 border-emerald-200',
+    ring: 'focus:ring-[#059669]',
+    btnGradient: 'from-[#059669] to-[#10B981]',
+    shadow: 'shadow-emerald-500/25'
   }
 };
 
@@ -68,7 +68,6 @@ export default function SignIn({
   const handleRoleChange = (roleKey) => {
     setSelectedRole(roleKey);
     setError('');
-    // Clear form when switching roles for security/cleanliness
     setForm({ email: '', password: '' });
   };
 
@@ -101,189 +100,199 @@ export default function SignIn({
   const RoleIcon = currentRole.icon;
 
   return (
-    <div className="min-h-screen w-full flex bg-white font-sans overflow-hidden">
+    <div className="min-h-screen w-full bg-[#EBF3FA] font-sans relative overflow-hidden flex items-center justify-center p-4 sm:p-6 lg:p-8">
       
-      {/* LEFT PANEL: Branding & Visuals (Hidden on small screens) */}
-      <div className="hidden lg:flex lg:w-5/12 relative overflow-hidden bg-slate-950 flex-col justify-between p-12">
-        {/* Abstract Background Elements */}
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-indigo-600/30 to-purple-600/30 blur-[80px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] rounded-full bg-gradient-to-bl from-blue-600/20 to-cyan-600/20 blur-[80px]" />
+      {/* ─── MAIN CARD CONTAINER (Matching Image 2 Layout) ─── */}
+      <div 
+        className={`relative z-20 w-full max-w-5xl bg-white rounded-[32px] sm:rounded-[40px] shadow-2xl border border-slate-100 overflow-hidden flex flex-col lg:flex-row min-h-[560px] lg:min-h-[620px] transition-transform duration-300 ${shake ? 'animate-[shake_0.5s_ease-in-out]' : ''}`}
+      >
         
-        {/* Content */}
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 text-white mb-16">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold tracking-tight">AlumniConnect</span>
-          </div>
+        {/* ─── LEFT BLUE CURVED BANNER (Matching Image 2 Left Side) ─── */}
+        <div className="w-full lg:w-5/12 bg-gradient-to-br from-[#0F4C81] via-[#1B5999] to-[#163172] text-white p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden rounded-b-[40px] lg:rounded-b-none lg:rounded-r-[240px] min-h-[340px] lg:min-h-full">
+          
+          {/* 3D Sphere Overlaps inside/spilling out of Left Banner */}
+          
+          {/* Sphere 1: Large Bottom-Left 3D Ball */}
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 sm:w-80 sm:h-80 rounded-full bg-gradient-to-tr from-[#1572CF] via-[#2A8BF2] to-[#60A5FA] shadow-2xl pointer-events-none opacity-95" />
+          
+          {/* Sphere 2: Mid Floating 3D Ball overlapping curve */}
+          <div className="absolute top-1/2 right-4 lg:-right-12 -translate-y-1/2 w-44 h-44 sm:w-56 sm:h-56 rounded-full bg-gradient-to-tr from-[#1D6FD8] via-[#3B82F6] to-[#93C5FD] shadow-2xl pointer-events-none z-10" />
 
-          <div className="space-y-6 max-w-md mt-20">
-            <h1 className="text-4xl lg:text-5xl font-bold text-white leading-[1.15] tracking-tight">
-              Bridging the gap between <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Past, Present & Future</span>
-            </h1>
-            <p className="text-lg text-slate-400 leading-relaxed font-light">
-              Join our exclusive network to find mentors, unlock career opportunities, and stay connected with your alma mater.
-            </p>
-          </div>
-        </div>
-
-        <div className="relative z-10">
-          <div className="flex items-center gap-4">
-            <div className="flex -space-x-3">
-              {[1,2,3,4].map((i) => (
-                <div key={i} className="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-800 flex items-center justify-center overflow-hidden">
-                  <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`} alt="avatar" className="w-full h-full object-cover" />
+          {/* TOP SECTION: WELCOME + AlumniConnect */}
+          <div className="relative z-20 space-y-4">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white uppercase leading-none">
+                WELCOME
+              </h1>
+              <div className="flex items-center gap-3 mt-3">
+                <div className="p-2 rounded-2xl bg-white shadow-md border border-white/40 shrink-0">
+                  <AlumniConnectLogo className="w-9 h-9" showText={false} />
                 </div>
-              ))}
-            </div>
-            <div className="text-sm">
-              <p className="text-white font-medium">Join 5,000+ members</p>
-              <p className="text-slate-500">Already networking today</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* RIGHT PANEL: Authentication Form */}
-      <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 lg:px-24 xl:px-32 relative bg-slate-50">
-        
-        {/* Mobile Logo */}
-        <div className="lg:hidden flex items-center gap-3 mb-12 absolute top-8 left-6">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-white" />
-          </div>
-          <span className="text-lg font-bold text-slate-900">AlumniConnect</span>
-        </div>
-
-        <div 
-          className={`w-full max-w-md mx-auto transition-transform duration-300 ${shake ? 'animate-[shake_0.5s_ease-in-out]' : ''}`}
-        >
-          {/* Header */}
-          <div className="mb-10 text-center lg:text-left">
-            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-3">Welcome back</h2>
-            <p className="text-slate-500">Please enter your details to sign in.</p>
-          </div>
-
-          {/* Premium Role Selector */}
-          <div className="bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200 mb-8 flex gap-1 relative z-10">
-            {Object.values(roleMeta).map((role) => {
-              const isActive = selectedRole === role.id;
-              const Icon = role.icon;
-              return (
-                <button
-                  key={role.id}
-                  type="button"
-                  onClick={() => handleRoleChange(role.id)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${
-                    isActive 
-                      ? 'bg-slate-900 text-white shadow-md' 
-                      : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
-                  }`}
-                >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
-                  {role.title}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Error Message */}
-          {error && (
-            <div className="mb-6 flex items-center gap-3 p-4 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm animate-in fade-in slide-in-from-top-2">
-              <AlertCircle className="w-5 h-5 shrink-0" />
-              <span className="font-medium">{error}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email Field */}
-            <div className="space-y-1.5">
-              <label className="block text-sm font-medium text-slate-700">Email Address</label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className={`w-5 h-5 transition-colors ${form.email ? currentRole.text : 'text-slate-400 group-focus-within:text-slate-600'}`} />
+                <div>
+                  <h2 className="text-xl font-black text-white tracking-tight leading-none">AlumniConnect</h2>
+                  <span className="text-[10px] font-bold text-amber-300 uppercase tracking-widest block mt-0.5">Mentorship Network</span>
                 </div>
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={handleChange}
-                  className={`block w-full pl-11 pr-4 py-3.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 ${currentRole.ring} focus:border-transparent transition-all shadow-sm`}
-                  placeholder="Enter your email"
-                />
               </div>
             </div>
 
-            {/* Password Field */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label className="block text-sm font-medium text-slate-700">Password</label>
-                <a href="#" className={`text-sm font-semibold ${currentRole.text} hover:underline`}>Forgot password?</a>
-              </div>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className={`w-5 h-5 transition-colors ${form.password ? currentRole.text : 'text-slate-400 group-focus-within:text-slate-600'}`} />
-                </div>
-                <input
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  value={form.password}
-                  onChange={handleChange}
-                  className={`block w-full pl-11 pr-12 py-3.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 ${currentRole.ring} focus:border-transparent transition-all shadow-sm`}
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
+            {/* QUOTE SECTION (Under AlumniConnect - Campus Quote pill removed) */}
+            <div className="pt-6 sm:pt-10 space-y-3">
+              <blockquote className="space-y-2">
+                <p className="text-xl sm:text-2xl font-extrabold text-white leading-tight drop-shadow-sm">
+                  "Where <span className="text-amber-300 underline underline-offset-4 decoration-amber-400/50">Memories</span> Meet <span className="text-sky-200">New Opportunities</span>"
+                </p>
+                <p className="text-xs text-blue-100/80 font-medium leading-relaxed max-w-xs">
+                  Connect with verified alumni mentors, career placement opportunities, and college guidance.
+                </p>
+              </blockquote>
+            </div>
+          </div>
+
+          {/* Footer note (Team 9 removed) */}
+          <div className="relative z-20 pt-6 border-t border-white/15 text-[11px] text-blue-200 font-bold flex items-center justify-between">
+            <span>KIET · KIEW · KIEK</span>
+          </div>
+        </div>
+
+        {/* ─── RIGHT FORM SECTION (Matching Image 2 Right Side) ─── */}
+        <div className="w-full lg:w-7/12 bg-white p-8 sm:p-12 lg:p-16 flex flex-col justify-center relative z-10">
+          
+          {/* Sphere 3: Bottom-Right 3D Ball (spilling outside bottom right corner) */}
+          <div className="absolute -bottom-24 -right-24 w-64 h-64 sm:w-80 sm:h-80 rounded-full bg-gradient-to-tl from-[#2563EB]/40 via-[#3B82F6]/30 to-[#60A5FA]/20 blur-sm pointer-events-none z-0" />
+
+          <div className="space-y-6 max-w-md mx-auto w-full relative z-20">
+            
+            {/* Heading */}
+            <div>
+              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight uppercase">SIGN IN</h2>
+              <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">Select your portal role and enter your details.</p>
             </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full flex items-center justify-center gap-2 py-3.5 mt-2 rounded-xl bg-gradient-to-r ${currentRole.gradient} hover:opacity-90 text-white font-semibold text-base shadow-lg ${currentRole.shadow} transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed`}
-            >
-              {loading ? (
-                <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-              ) : (
-                <>
-                  Sign In <ArrowRight className="w-4 h-4 ml-1" />
-                </>
-              )}
-            </button>
-          </form>
+            {/* Role Switcher Tabs */}
+            <div className="bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/80 flex gap-1.5">
+              {Object.values(roleMeta).map((role) => {
+                const isActive = selectedRole === role.id;
+                const Icon = role.icon;
+                return (
+                  <button
+                    key={role.id}
+                    type="button"
+                    onClick={() => handleRoleChange(role.id)}
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 cursor-pointer ${
+                      isActive 
+                        ? 'bg-[#0F4C81] text-white shadow-md' 
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                    }`}
+                  >
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-amber-300' : 'text-slate-400'}`} />
+                    {role.title}
+                  </button>
+                );
+              })}
+            </div>
 
-          {/* Registration Link */}
-          {selectedRole !== 'admin' ? (
-            <div className="mt-8 text-center text-sm text-slate-500">
-              Don't have an account?{' '}
+            {/* Error Message */}
+            {error && (
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Email Input */}
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Your email</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Mail className="w-4 h-4 text-slate-400" />
+                  </div>
+                  <input
+                    name="email"
+                    type="email"
+                    required
+                    value={form.email}
+                    onChange={handleChange}
+                    className={`block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 ${currentRole.ring} transition-all`}
+                    placeholder="Your email"
+                  />
+                </div>
+              </div>
+
+              {/* Password Input */}
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Enter Password</label>
+                  <a href="#" className="text-xs font-bold text-slate-500 hover:text-slate-800 hover:underline">Forgot password?</a>
+                </div>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Lock className="w-4 h-4 text-slate-400" />
+                  </div>
+                  <input
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={form.password}
+                    onChange={handleChange}
+                    className={`block w-full pl-11 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 ${currentRole.ring} transition-all`}
+                    placeholder="Enter Password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Sign In Button (Clear Dark Blue Solid Gradient with White Text) */}
               <button
-                onClick={() => onNavigateToSignUp(selectedRole)}
-                className={`font-bold ${currentRole.text} hover:underline transition-all`}
+                type="submit"
+                disabled={loading}
+                className={`w-full flex items-center justify-center gap-2 py-4 mt-2 rounded-2xl bg-gradient-to-r ${currentRole.btnGradient} text-white font-black text-sm sm:text-base shadow-xl ${currentRole.shadow} transition-all duration-200 hover:opacity-95 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer uppercase tracking-wider relative z-30`}
               >
-                Sign up as {selectedRole === 'student' ? 'Student' : 'Alumnus'}
+                {loading ? (
+                  <svg className="animate-spin w-5 h-5 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                ) : (
+                  <>
+                    <span>SIGN IN AS {currentRole.title}</span>
+                    <ArrowRight className="w-4.5 h-4.5 text-white" />
+                  </>
+                )}
               </button>
-            </div>
-          ) : (
-            <div className="mt-8 text-center">
-              <div className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-slate-100 border border-slate-200 text-xs font-medium text-slate-500">
-                <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
-                Admin access requires manual verification
+            </form>
+
+            {/* Registration Navigation */}
+            {selectedRole !== 'admin' ? (
+              <div className="text-center text-xs sm:text-sm text-slate-500 font-medium pt-2">
+                Don't have an account?{' '}
+                <button
+                  onClick={() => onNavigateToSignUp(selectedRole)}
+                  className={`font-extrabold ${currentRole.accentText} hover:underline transition-all cursor-pointer`}
+                >
+                  Sign up as {selectedRole === 'student' ? 'Student' : 'Alumni'}
+                </button>
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="text-center pt-2">
+                <div className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-600">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#0F4C81]" />
+                  Admin access requires verified credentials
+                </div>
+              </div>
+            )}
+
+          </div>
+
         </div>
+
       </div>
 
       <style>{`

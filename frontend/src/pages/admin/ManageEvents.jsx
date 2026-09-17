@@ -6,7 +6,7 @@ import EmptyState from '../../components/ui/EmptyState';
 import { getEvents, addEvent, updateEvent, deleteEvent } from '../../api/managementApi';
 import { Calendar, Plus, MapPin, Users, Trash2, Edit2, X, Tag } from 'lucide-react';
 
-export default function ManageEvents() {
+export default function ManageEvents({ onBack, onToggleSidebar }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -89,7 +89,12 @@ export default function ManageEvents() {
 
   return (
     <div className="flex-1 min-w-0 bg-slate-950 pb-12">
-      <Header title="Manage Alumni Events" subtitle="Organize conferences, career bootcamps, workshops and networking sessions" />
+      <Header 
+        title="Manage Alumni Events" 
+        subtitle="Organize conferences, career bootcamps, workshops and networking sessions" 
+        onBack={onBack}
+        onToggleSidebar={onToggleSidebar}
+      />
 
       <main className="p-6 space-y-6 max-w-[1600px] mx-auto">
         {/* Actions & Filters */}

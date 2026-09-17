@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider, useAuth } from './lib/auth';
+import { NotificationProvider } from './context/NotificationContext';
 
 // Navigation & Layout
 import Sidebar from './components/admin/Sidebar';
@@ -45,51 +46,66 @@ function MainLayout() {
   };
 
   const [activeTab, setActiveTab] = useState(() => getDefaultTab(role));
-  const [collapsed, setCollapsed] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     setActiveTab(getDefaultTab(role));
   }, [role]);
 
+  useEffect(() => {
+    const handleNavEvent = (e) => {
+      if (e.detail) {
+        setActiveTab(e.detail);
+      }
+    };
+    window.addEventListener('navigate-tab', handleNavEvent);
+    return () => window.removeEventListener('navigate-tab', handleNavEvent);
+  }, []);
+
+  const toggleSidebar = () => setSidebarOpen(prev => !prev);
+  const closeSidebar = () => setSidebarOpen(false);
+
+  const handleBackToOverview = () => setActiveTab(getDefaultTab(role));
+
   const renderContent = () => {
     switch (activeTab) {
       // Admin Views (Full platform management)
-      case 'dashboard':        return <AdminDashboard />;
-      case 'alumni':           return <ManageAlumni />;
-      case 'students':         return <ManageStudents />;
-      case 'manage-events':    return <ManageEvents />;
-      case 'contributions':    return <Contributions />;
-      case 'reports':          return <ReportsAnalytics />;
-      case 'settings':         return <PlatformSettings />;
+      case 'dashboard':        return <AdminDashboard onToggleSidebar={toggleSidebar} />;
+      case 'alumni':           return <ManageAlumni onBack={handleBackToOverview} onToggleSidebar={toggleSidebar} />;
+      case 'students':         return <ManageStudents onBack={handleBackToOverview} onToggleSidebar={toggleSidebar} />;
+      case 'manage-events':    return <ManageEvents onBack={handleBackToOverview} onToggleSidebar={toggleSidebar} />;
+      case 'contributions':    return <Contributions onBack={handleBackToOverview} onToggleSidebar={toggleSidebar} />;
+      case 'reports':          return <ReportsAnalytics onBack={handleBackToOverview} onToggleSidebar={toggleSidebar} />;
+      case 'settings':         return <PlatformSettings onBack={handleBackToOverview} onToggleSidebar={toggleSidebar} />;
 
       // Alumni Views
-      case 'alumni-dashboard': return <AlumniDashboard onNavigate={(tab) => setActiveTab(tab)} />;
-      case 'alumni-profile':   return <AlumniProfileView />;
+      case 'alumni-dashboard': return <AlumniDashboard onNavigate={(tab) => setActiveTab(tab)} onToggleSidebar={toggleSidebar} />;
+      case 'alumni-profile':   return <AlumniProfileView onBack={handleBackToOverview} onToggleSidebar={toggleSidebar} />;
 
       // Student Views
-      case 'student-dashboard': return <StudentDashboard onNavigate={(tab) => setActiveTab(tab)} />;
-      case 'find-alumni':      return <FindAlumni onNavigateToChat={() => setActiveTab('chat')} />;
+      case 'student-dashboard': return <StudentDashboard onNavigate={(tab) => setActiveTab(tab)} onToggleSidebar={toggleSidebar} />;
+      case 'find-alumni':      return <FindAlumni onBack={handleBackToOverview} onToggleSidebar={toggleSidebar} onNavigateToChat={() => setActiveTab('chat')} />;
 
       // Shared Operations Views
-      case 'events':           return <EventsList onNavigate={(tab) => setActiveTab(tab)} />;
-      case 'mentorship':       return <MyMentorships />;
-      case 'referrals':        return <MyReferrals onNavigate={(tab) => setActiveTab(tab)} />;
-      case 'submit-referral':  return <SubmitReferral onBack={() => setActiveTab('referrals')} />;
-      case 'chat':             return <ChatPlatform />;
+      case 'events':           return <EventsList onBack={handleBackToOverview} onToggleSidebar={toggleSidebar} onNavigate={(tab) => setActiveTab(tab)} />;
+      case 'mentorship':       return <MyMentorships onBack={handleBackToOverview} onToggleSidebar={toggleSidebar} />;
+      case 'referrals':        return <MyReferrals onBack={handleBackToOverview} onToggleSidebar={toggleSidebar} onNavigate={(tab) => setActiveTab(tab)} />;
+      case 'submit-referral':  return <SubmitReferral onBack={() => setActiveTab('referrals')} onToggleSidebar={toggleSidebar} />;
+      case 'chat':             return <ChatPlatform onBack={handleBackToOverview} onToggleSidebar={toggleSidebar} />;
 
-      default:                 return role === 'alumni' ? <AlumniDashboard onNavigate={setActiveTab} /> : role === 'student' ? <StudentDashboard onNavigate={setActiveTab} /> : <AdminDashboard />;
+      default:                 return role === 'alumni' ? <AlumniDashboard onNavigate={setActiveTab} onToggleSidebar={toggleSidebar} /> : role === 'student' ? <StudentDashboard onNavigate={setActiveTab} onToggleSidebar={toggleSidebar} /> : <AdminDashboard onToggleSidebar={toggleSidebar} />;
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-indigo-600 selection:text-white">
+    <div className="flex min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-indigo-600 selection:text-white relative">
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        collapsed={collapsed}
-        setCollapsed={setCollapsed}
+        isOpen={sidebarOpen}
+        onClose={closeSidebar}
       />
-      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${collapsed ? 'ml-20' : 'ml-64'}`}>
+      <div className="flex-1 flex flex-col min-w-0 w-full transition-all duration-300">
         {renderContent()}
       </div>
     </div>
@@ -150,11 +166,13 @@ function AuthGate() {
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/*" element={<AuthGate />} />
-        </Routes>
-      </BrowserRouter>
+      <NotificationProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/*" element={<AuthGate />} />
+          </Routes>
+        </BrowserRouter>
+      </NotificationProvider>
     </AuthProvider>
   );
 }

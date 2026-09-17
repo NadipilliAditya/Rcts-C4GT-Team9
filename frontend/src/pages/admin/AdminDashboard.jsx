@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/admin/Header';
 import SummaryCards from '../../components/admin/SummaryCards';
-import DepartmentBarChart from '../../components/admin/charts/DepartmentBarChart';
-import EngagementLineChart from '../../components/admin/charts/EngagementLineChart';
+import AlumniCardsGrid from '../../components/admin/AlumniCardsGrid';
 import IndustryPieChart from '../../components/admin/charts/IndustryPieChart';
 import EventAreaChart from '../../components/admin/charts/EventAreaChart';
 import MentorshipDomainBarChart from '../../components/admin/charts/MentorshipDomainBarChart';
 import EngagedAlumniTable from '../../components/admin/EngagedAlumniTable';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import ErrorAlert from '../../components/ui/ErrorAlert';
+import { realAlumniList } from '../../data/realAlumniData';
 import { 
   getOverview, 
   getByDepartment, 
@@ -17,14 +17,18 @@ import {
   getMentorshipDomains, 
   getEventParticipation 
 } from '../../api/analyticsApi';
-import { Filter, Calendar, TrendingUp } from 'lucide-react';
+import { Filter, Calendar, TrendingUp, Search, X } from 'lucide-react';
 
-export default function AdminDashboard() {
+export default function AdminDashboard({ onToggleSidebar }) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
 
-  // Filters
+  // Active Metric Filter & Search Query
+  const [activeFilter, setActiveFilter] = useState('activeAlumni');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Date & Dept Filters
   const [timeframe, setTimeframe] = useState('8m');
   const [department, setDepartment] = useState('all');
 
@@ -66,14 +70,13 @@ export default function AdminDashboard() {
       setEventParticipation(eventsRes.data);
     } catch (err) {
       console.error('Failed to load analytics:', err);
-      // If API error, provide rich fallbacks
+      // Fallback overview numbers
       setOverview({
         totalAlumni: 22,
         activeAlumni: 22,
-        mentors: 18,
+        mentors: 22,
         connections: 77
       });
-
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -91,14 +94,35 @@ export default function AdminDashboard() {
         subtitle="Platform engagement performance & key institutional metrics"
         onRefresh={() => fetchAllAnalytics(true)}
         isRefreshing={refreshing}
+        onToggleSidebar={onToggleSidebar}
       />
 
       <main className="p-6 space-y-6 max-w-[1600px] mx-auto">
         {/* Controls & Filter Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-white border border-slate-200/80 rounded-2xl shadow-xs">
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-white border border-slate-200/80 rounded-2xl shadow-xs">
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-700 shrink-0">
             <Filter className="w-4 h-4 text-indigo-600" />
             <span>Telemetry & Date Filter</span>
+          </div>
+
+          {/* Search Bar under Telemetry Filter */}
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search alumni by name, company, role, skills, or location..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
@@ -154,33 +178,35 @@ export default function AdminDashboard() {
           <ErrorAlert message={error} onRetry={() => fetchAllAnalytics()} />
         ) : (
           <>
-            {/* 1. 6 KPI Summary Cards */}
-            <SummaryCards data={overview} />
+            {/* 1. 6 KPI Summary Cards (Interactive - Click to Filter) */}
+            <SummaryCards 
+              data={overview} 
+              activeFilter={activeFilter}
+              onSelectFilter={setActiveFilter}
+            />
 
-            {/* 2. Primary Analytics Charts Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
-                <DepartmentBarChart data={departmentData} />
-              </div>
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
-                <EngagementLineChart data={engagementTrend} />
-              </div>
-            </div>
+            {/* 2. Dynamic Alumni Cards Grid ("small small small boxes" matching Image 2) */}
+            <AlumniCardsGrid
+              alumniList={realAlumniList}
+              activeFilter={activeFilter}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+            />
 
-            {/* 3. Secondary Analytics Charts Grid */}
+            {/* 3. Analytics Charts Grid (Alumni by Industry, Event Participation, Most Common Mentorship Domains) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+              <div>
                 <IndustryPieChart data={industryData} />
               </div>
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+              <div>
                 <EventAreaChart data={eventParticipation} />
               </div>
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+              <div>
                 <MentorshipDomainBarChart data={mentorshipDomains} />
               </div>
             </div>
 
-            {/* 4. Most Engaged Alumni Ranked Table */}
+            {/* 4. Top Engaged Alumni Leaderboard */}
             <EngagedAlumniTable alumni={overview?.topEngagedAlumni || []} />
           </>
         )}

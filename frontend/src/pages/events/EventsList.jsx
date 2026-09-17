@@ -10,13 +10,14 @@ import { Select } from '../../components/ui/select';
 import { Alert, AlertDescription } from '../../components/ui/alert';
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogContent, DialogFooter } from '../../components/ui/dialog';
 import { useAuth } from '../../lib/auth';
+import Header from '../../components/admin/Header';
 import {
   CalendarDays, MapPin, Users, PlusCircle, Search,
   Calendar, ChevronRight
 } from 'lucide-react';
 import { DatePicker } from '../../components/ui/calendar';
 
-export default function EventsList() {
+export default function EventsList({ onBack, onToggleSidebar }) {
   const { user } = useAuth();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -158,28 +159,35 @@ export default function EventsList() {
   });
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            <CalendarDays className="w-6 h-6 text-indigo-600" />
-            Events, Workshops & Networking
-          </h1>
-          <p className="text-sm text-slate-500">
-            Join tech workshops, mock interview sessions, and campus networking meets hosted by alumni.
-          </p>
-        </div>
+    <div className="flex-1 min-w-0 bg-[#f8fafc] pb-12 min-h-screen">
+      <Header
+        title="Events, Workshops & Webinars"
+        subtitle="Join tech workshops, mock interview sessions, and campus networking meets hosted by alumni"
+        onBack={onBack}
+        onToggleSidebar={onToggleSidebar}
+        searchQuery={search}
+        onSearchChange={setSearch}
+        searchPlaceholder="Search events by title, topic, location..."
+      />
 
-        {(user?.role === 'alumni' || user?.role === 'admin') && (
-          <Button
-            onClick={handleOpenCreateModal}
-            className="bg-emerald-600 hover:bg-emerald-700 flex items-center gap-1.5 text-xs font-semibold"
-          >
-            <PlusCircle className="w-4 h-4" /> Host an Event
-          </Button>
-        )}
-      </div>
+      <main className="p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+              <CalendarDays className="w-6 h-6 text-purple-600" />
+              Alumni & Campus Events Schedule
+            </h2>
+          </div>
+
+          {(user?.role === 'alumni' || user?.role === 'admin') && (
+            <Button
+              onClick={handleOpenCreateModal}
+              className="bg-emerald-600 hover:bg-emerald-700 flex items-center gap-1.5 text-xs font-semibold cursor-pointer"
+            >
+              <PlusCircle className="w-4 h-4" /> Host an Event
+            </Button>
+          )}
+        </div>
 
       {/* Filter Chips & Search Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -428,6 +436,7 @@ export default function EventsList() {
           </DialogFooter>
         </form>
       </Dialog>
+      </main>
     </div>
   );
 }

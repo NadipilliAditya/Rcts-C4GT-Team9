@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from '../../components/admin/Header';
 import { 
   FileText, 
   Download, 
@@ -12,7 +13,7 @@ import {
   Sparkles
 } from 'lucide-react';
 
-export default function ReportsAnalytics() {
+export default function ReportsAnalytics({ onBack, onToggleSidebar }) {
   const [reportType, setReportType] = useState('annual');
   const [downloading, setDownloading] = useState(null);
 
@@ -64,26 +65,32 @@ export default function ReportsAnalytics() {
   };
 
   return (
-    <div className="p-6 lg:p-8 space-y-8 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">
-            Analytics & Official Reports
-          </h1>
-          <p className="text-slate-400 text-sm mt-1">
-            Export accreditation documents, engagement data matrices, and demographic benchmarks.
-          </p>
-        </div>
+    <div className="flex-1 min-w-0 bg-slate-950 pb-12">
+      <Header
+        title="Analytics & Official Reports"
+        subtitle="Export accreditation documents, engagement data matrices, and demographic benchmarks."
+        onToggleSidebar={onToggleSidebar}
+      />
 
-        <button 
-          onClick={() => alert('Generating customized real-time data export...')}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-semibold shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
-        >
-          <Sparkles className="w-4 h-4" />
-          <span>Generate Custom Export</span>
-        </button>
-      </div>
+      <main className="p-6 lg:p-8 space-y-8 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white tracking-tight">
+              Platform Data Exports
+            </h1>
+            <p className="text-slate-400 text-xs mt-1">
+              Download pre-formatted NIRF, NAAC and internal management audits.
+            </p>
+          </div>
+
+          <button 
+            onClick={() => alert('Generating customized real-time data export...')}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-semibold shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>Generate Custom Export</span>
+          </button>
+        </div>
 
       {/* Summary highlight cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -156,6 +163,7 @@ export default function ReportsAnalytics() {
           ))}
         </div>
       </div>
+      </main>
     </div>
   );
 }

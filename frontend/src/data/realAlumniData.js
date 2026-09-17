@@ -22,6 +22,8 @@ export const realAlumniList = [
     skills: ['Python', 'AI/ML', 'Data Engineering', 'TensorFlow'],
     availableForMentorship: true,
     availableForReferrals: true,
+    activeConversation: true,
+    hasStudentConnection: true,
     rating: 4.9,
     bio: 'AI Engineer at DATA I2I specializing in predictive models, machine learning pipelines, and student mentoring.'
   },
@@ -48,6 +50,8 @@ export const realAlumniList = [
     skills: ['React', 'Node.js', 'MongoDB', 'Fullstack', 'FastAPI'],
     availableForMentorship: true,
     availableForReferrals: true,
+    activeConversation: true,
+    hasStudentConnection: true,
     rating: 4.85,
     bio: 'Fullstack engineer at Alphanome.ai building modern AI interfaces and scalable backend services.'
   },
@@ -74,6 +78,8 @@ export const realAlumniList = [
     skills: ['RPA', 'Python', 'Process Automation', 'AI'],
     availableForMentorship: true,
     availableForReferrals: false,
+    activeConversation: true,
+    hasStudentConnection: true,
     rating: 4.8,
     bio: 'Working on intelligent process automation and RPA solutions at Piramal.'
   },
@@ -100,6 +106,8 @@ export const realAlumniList = [
     skills: ['EdTech', 'Curriculum Design', 'Data Analysis', 'Mentorship'],
     availableForMentorship: true,
     availableForReferrals: true,
+    activeConversation: true,
+    hasStudentConnection: true,
     rating: 4.75,
     bio: 'Passionate educator and tech course coordinator helping students bridge academia with industry.'
   },

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from '../../components/admin/Header';
 import { 
   Settings, 
   ShieldCheck, 
@@ -13,7 +14,7 @@ import {
   Sliders
 } from 'lucide-react';
 
-export default function PlatformSettings() {
+export default function PlatformSettings({ onBack, onToggleSidebar }) {
   const [saved, setSaved] = useState(false);
   const [config, setConfig] = useState({
     academicYear: '2024-2025',
@@ -36,18 +37,24 @@ export default function PlatformSettings() {
   };
 
   return (
-    <div className="p-6 lg:p-8 space-y-8 max-w-5xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
-            <Settings className="w-7 h-7 text-blue-400" />
-            Platform & Governance Settings
-          </h1>
-          <p className="text-slate-400 text-sm mt-1">
-            Configure system rules, communication policies, academic calendars, and role permissions.
-          </p>
-        </div>
+    <div className="flex-1 min-w-0 bg-slate-950 pb-12">
+      <Header
+        title="Platform & Governance Settings"
+        subtitle="Configure system rules, communication policies, academic calendars, and role permissions."
+        onToggleSidebar={onToggleSidebar}
+      />
+
+      <main className="p-6 lg:p-8 space-y-8 max-w-5xl mx-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-3">
+              <Settings className="w-6 h-6 text-blue-400" />
+              Governance Controls
+            </h1>
+            <p className="text-slate-400 text-xs mt-1">
+              Configure system rules, communication policies, and role permissions.
+            </p>
+          </div>
 
         <button
           onClick={handleSave}
@@ -198,6 +205,7 @@ export default function PlatformSettings() {
           </div>
         </div>
       </div>
+      </main>
     </div>
   );
 }

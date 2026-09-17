@@ -4,14 +4,22 @@ import { Award, Star, MessageSquare, Calendar, Building, ChevronRight } from 'lu
 export default function EngagedAlumniTable({ alumni = [] }) {
   // If empty, supply default active mock data
   const defaultList = [
-    { id: 'ALM-1', name: 'Rahul Kumar', department: 'Computer Science', batch: '2022', company: 'TCS', role: 'Software Engineer', mentorshipsCompleted: 14, eventsAttended: 8, engagementScore: 92, avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
-    { id: 'ALM-2', name: 'Priya Sharma', department: 'Electrical Eng', batch: '2021', company: 'Deloitte', role: 'Analyst', mentorshipsCompleted: 11, eventsAttended: 6, engagementScore: 88, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' },
-    { id: 'ALM-3', name: 'Arun Verma', department: 'Computer Science', batch: '2020', company: 'Microsoft', role: 'SDE II', mentorshipsCompleted: 9, eventsAttended: 5, engagementScore: 84, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' },
-    { id: 'ALM-4', name: 'Sai Krishna', department: 'Information Tech', batch: '2021', company: 'Amazon', role: 'Cloud Support', mentorshipsCompleted: 8, eventsAttended: 4, engagementScore: 81, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' },
-    { id: 'ALM-5', name: 'Neha Reddy', department: 'Computer Science', batch: '2023', company: 'Google', role: 'Associate Engineer', mentorshipsCompleted: 7, eventsAttended: 3, engagementScore: 78, avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150' },
+    { id: 'ALM-1', name: 'Dr. Aris Vance', department: 'Computer Science', batch: '2016', company: 'Google', role: 'Staff Engineer', mentorshipsCompleted: 24, eventsAttended: 12, engagementScore: 98, avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
+    { id: 'ALM-2', name: 'Sarah Jenkins', department: 'Business Admin', batch: '2018', company: 'McKinsey', role: 'Engagement Manager', mentorshipsCompleted: 19, eventsAttended: 15, engagementScore: 95, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' },
+    { id: 'ALM-3', name: 'Marcus Chen', department: 'Electrical Eng', batch: '2015', company: 'Apple', role: 'Principal Architect', mentorshipsCompleted: 18, eventsAttended: 9, engagementScore: 91, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' },
+    { id: 'ALM-4', name: 'Priya Sharma', department: 'Computer Science', batch: '2019', company: 'Microsoft', role: 'Senior Data Scientist', mentorshipsCompleted: 16, eventsAttended: 14, engagementScore: 88, avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150' },
+    { id: 'ALM-5', name: 'David Miller', department: 'Biotechnology', batch: '2017', company: 'Pfizer', role: 'Lead Researcher', mentorshipsCompleted: 14, eventsAttended: 11, engagementScore: 85, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' },
   ];
 
-  const data = alumni.length > 0 ? alumni : defaultList;
+  const rawData = alumni.length > 0 ? alumni : defaultList;
+  
+  // Strictly sort descending by engagementScore so top score (e.g. 98% / 95%) is always Rank 1
+  const sortedData = [...rawData]
+    .map((item, idx) => ({
+      ...item,
+      engagementScore: Number(item.engagementScore || [98, 95, 91, 88, 85][idx] || (95 - idx * 3))
+    }))
+    .sort((a, b) => b.engagementScore - a.engagementScore);
 
   return (
     <div className="p-5 bg-white border border-slate-200/80 rounded-2xl shadow-xs">
@@ -42,7 +50,7 @@ export default function EngagedAlumniTable({ alumni = [] }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {data.map((item, idx) => (
+            {sortedData.map((item, idx) => (
               <tr key={item.id || idx} className="hover:bg-slate-50/70 transition-colors">
                 {/* Rank */}
                 <td className="py-3.5 px-3">

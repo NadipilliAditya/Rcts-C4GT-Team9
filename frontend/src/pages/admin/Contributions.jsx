@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from '../../components/admin/Header';
 import { 
   DollarSign, 
   TrendingUp, 
@@ -14,7 +15,7 @@ import {
   Calendar
 } from 'lucide-react';
 
-export default function Contributions() {
+export default function Contributions({ onBack, onToggleSidebar }) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [search, setSearch] = useState('');
 
@@ -110,34 +111,38 @@ export default function Contributions() {
   );
 
   return (
-    <div className="p-6 lg:p-8 space-y-8 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">
-            Alumni Contributions & Endowment
-          </h1>
-          <p className="text-slate-400 text-sm mt-1">
-            Track alumni donations, scholarships, laboratory sponsorships, and endowment drives.
-          </p>
+    <div className="flex-1 min-w-0 bg-[#f8fafc] pb-12 min-h-screen">
+      <Header
+        title="Alumni Contributions & Endowment"
+        subtitle="Track alumni donations, scholarships, laboratory sponsorships, and endowment drives"
+        onBack={onBack}
+        onToggleSidebar={onToggleSidebar}
+      />
+
+      <main className="p-6 lg:p-8 space-y-8 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+              Institutional Endowment Overview
+            </h2>
+          </div>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => alert('Exporting financial report CSV...')}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            >
+              <Download className="w-4 h-4" />
+              <span>Export Report</span>
+            </button>
+            <button 
+              onClick={() => alert('New Campaign Modal: Campaign creation is enabled for Administrators.')}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md shadow-emerald-600/20 transition-all cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create Campaign</span>
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={() => alert('Exporting donations CSV report...')}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-700 bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-medium transition-colors cursor-pointer"
-          >
-            <Download className="w-4 h-4" />
-            <span>Export Report</span>
-          </button>
-          <button 
-            onClick={() => alert('New Campaign Modal: Campaign creation is enabled for Administrators.')}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-600/30 transition-all cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Create Campaign</span>
-          </button>
-        </div>
-      </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -265,6 +270,7 @@ export default function Contributions() {
           </table>
         </div>
       </div>
+      </main>
     </div>
   );
 }

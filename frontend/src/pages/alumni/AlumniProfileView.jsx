@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from '../../components/admin/Header';
 import { useAuth } from '../../lib/auth';
 import { 
   User, 
@@ -14,7 +15,7 @@ import {
   Mail
 } from 'lucide-react';
 
-export default function AlumniProfileView() {
+export default function AlumniProfileView({ onBack, onToggleSidebar }) {
   const { user } = useAuth();
   const [saved, setSaved] = useState(false);
   const [profile, setProfile] = useState({
@@ -60,26 +61,30 @@ export default function AlumniProfileView() {
   };
 
   return (
-    <div className="p-6 lg:p-8 space-y-8 max-w-5xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">
-            Alumni Profile & Availability Settings
-          </h1>
-          <p className="text-slate-400 text-sm mt-1">
-            Keep your professional profile up to date so students can find and connect with you.
-          </p>
-        </div>
+    <div className="flex-1 min-w-0 bg-[#f8fafc] pb-12 min-h-screen">
+      <Header
+        title="Alumni Profile & Availability Settings"
+        subtitle="Keep your professional profile up to date so students can find and connect with you"
+        onBack={onBack}
+        onToggleSidebar={onToggleSidebar}
+      />
 
-        <button
-          onClick={handleSave}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-600/30 transition-all cursor-pointer"
-        >
-          <Save className="w-4 h-4" />
-          <span>Save Profile</span>
-        </button>
-      </div>
+      <main className="p-6 lg:p-8 space-y-8 max-w-5xl mx-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+              Manage Your Alumni Mentor Profile
+            </h2>
+          </div>
+
+          <button
+            onClick={handleSave}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-600/20 transition-all cursor-pointer"
+          >
+            <Save className="w-4 h-4" />
+            <span>Save Profile</span>
+          </button>
+        </div>
 
       {saved && (
         <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center gap-2">
@@ -235,6 +240,7 @@ export default function AlumniProfileView() {
           </div>
         </div>
       </div>
+      </main>
     </div>
   );
 }

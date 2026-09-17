@@ -19,7 +19,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 
-export default function ManageAlumni() {
+export default function ManageAlumni({ onBack, onToggleSidebar }) {
   const [alumni, setAlumni] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState(null);
@@ -161,6 +161,8 @@ export default function ManageAlumni() {
       <Header 
         title="Manage Alumni Directory" 
         subtitle="Manage verified alumni records, placement data, institutional branches & contact details"
+        onBack={onBack}
+        onToggleSidebar={onToggleSidebar}
       />
 
       <main className="p-6 space-y-6 max-w-[1600px] mx-auto">

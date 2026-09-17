@@ -15,13 +15,14 @@ import {
   DialogFooter
 } from '../../components/ui/dialog';
 import { useAuth } from '../../lib/auth';
+import Header from '../../components/admin/Header';
 import {
   BriefcaseBusiness, Building, User, Calendar, CheckCircle2,
   Clock, Award, XCircle, PlusCircle, ArrowRight, Sparkles,
   Copy, ExternalLink, ChevronRight
 } from 'lucide-react';
 
-export default function MyReferrals() {
+export default function MyReferrals({ onBack, onToggleSidebar }) {
   const { user } = useAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -114,29 +115,31 @@ export default function MyReferrals() {
   const isAlumni = user?.role === 'alumni' || user?.role === 'admin';
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            <BriefcaseBusiness className="w-6 h-6 text-emerald-600" />
-            {isStudent ? 'My Job & Internship Referrals' : 'Alumni Referral Pipeline'}
-          </h1>
-          <p className="text-sm text-slate-500">
-            {isStudent
-              ? 'Track referral submissions made for you by alumni mentors into corporate hiring pipelines.'
-              : 'Monitor candidate progress and recruitment status for referrals you submitted.'}
-          </p>
-        </div>
+    <div className="flex-1 min-w-0 bg-[#f8fafc] pb-12 min-h-screen">
+      <Header
+        title={isStudent ? 'Job & Internship Referrals Board' : 'Alumni Referral Pipeline'}
+        subtitle="Track referral submissions made by alumni mentors into corporate hiring pipelines"
+        onBack={onBack}
+        onToggleSidebar={onToggleSidebar}
+      />
 
-        {isAlumni && (
-          <Link to="/referrals/submit">
-            <Button className="bg-emerald-600 hover:bg-emerald-700 flex items-center gap-1.5 text-xs font-semibold">
-              <PlusCircle className="w-4 h-4" /> Refer a Student
-            </Button>
-          </Link>
-        )}
-      </div>
+      <main className="p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+              <BriefcaseBusiness className="w-6 h-6 text-emerald-600" />
+              {isStudent ? 'Referral Opportunities & Status' : 'Alumni Candidate Referrals'}
+            </h2>
+          </div>
+
+          {isAlumni && (
+            <Link to="/referrals/submit">
+              <Button className="bg-emerald-600 hover:bg-emerald-700 flex items-center gap-1.5 text-xs font-semibold cursor-pointer">
+                <PlusCircle className="w-4 h-4" /> Refer a Student
+              </Button>
+            </Link>
+          )}
+        </div>
 
       {error && (
         <Alert variant="destructive">
@@ -428,6 +431,7 @@ export default function MyReferrals() {
           </Button>
         </DialogFooter>
       </Dialog>
+      </main>
     </div>
   );
 }
